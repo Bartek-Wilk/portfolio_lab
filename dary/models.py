@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date, datetime
+from django.utils import timezone
 from django.urls import reverse
 
 class Category(models.Model):
@@ -10,7 +12,7 @@ class Category(models.Model):
 
 class Institution(models.Model):
 
-    INST = (
+    TYPE = (
         ('fundacja','fundacja'),
         ('organizacja pozarządowa','organizacja pozarządowa'),
         ('zbiórka lokalna','zbiórka lokalna')
@@ -18,8 +20,11 @@ class Institution(models.Model):
 
     name = models.CharField(max_length=64)
     description = models.TextField(max_length=1000)
-    type = models.CharField(max_length=64, choices=INST, default='fundacja')
+    type = models.CharField(max_length=64, choices=TYPE, default='fundacja')
     category = models.ManyToManyField(Category, related_name='institution')
+
+    def __str__(self):
+        return self.name
 
 class Donation(models.Model):
     quantity = models.IntegerField()
@@ -28,9 +33,9 @@ class Donation(models.Model):
     adress = models.TextField(max_length=200)
     phone_number = models.IntegerField()
     city = models.CharField(max_length=64)
-    zip_code = models.IntegerField()
-    pick_up_date = models.DateField()
-    pick_up_time = models.TimeField()
+    zip_code = models.CharField(max_length=64)
+    pick_up_date = models.DateField(default=datetime.now().date())
+    pick_up_time = models.TimeField(default=datetime.now().time())
     pick_up_comment = models.TextField(max_length=255)
-    user = models.ForeignKey(User, related_name='donuser', null=True, default='Null', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='donuser', null=True, default=None, on_delete=models.CASCADE)
 
