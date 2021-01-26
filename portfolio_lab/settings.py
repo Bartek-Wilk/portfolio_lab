@@ -127,3 +127,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'portfolio_lab/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+AUTHENTICATION_BACKENDS = ('dary.backend.EmailBackend',)
+LOGIN_REDIRECT_URL = 'main'

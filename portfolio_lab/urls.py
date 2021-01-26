@@ -15,13 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from dary.views import LandingPage, Login, AddDonation, Register
+from dary.views import LandingPage, MyLogin, AddDonation, Register
+from django.contrib.auth import views as auth_views
+from dary.forms import CustomAuthForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name='main'),
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
-    path('login/', Login.as_view(), name='login'),
-    path('register/', Register.as_view(), name='register'),
-
+    path('login/', MyLogin.as_view(template_name='login.html', authentication_form=CustomAuthForm), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html', next_page='main'), name='logout'),
+    path('register/', Register.as_view(), name='register')
 ]
