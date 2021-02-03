@@ -10,6 +10,9 @@
             <ul class="dropdown">
               <li><a href="#">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">Panel administracyjny</a></li>
+                {% endif %}
               <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             </ul>
           </li>
@@ -17,6 +20,8 @@
              {% else %}
              <p><a href="{% url 'login' %}">Zaloguj się</a></p>
           {% endif %}
+
+
 
         <ul>
           <li><a href="/" class="btn btn--without-border active">Start</a></li>
@@ -82,56 +87,57 @@
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
+            {% for c in cat %}
             <div class="form-group form-group--checkbox">
               <label>
                 <input
                   type="checkbox"
                   name="categories"
-                  value="clothes-to-use"
+                  value="{{ c.id }}"
                 />
                 <span class="checkbox"></span>
                 <span class="description"
-                  >ubrania, które nadają się do ponownego użycia</span
+                  >{{ c.name }}</span
                 >
               </label>
             </div>
+              {% endfor %}
 
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value="clothes-useless"
-                />
-                <span class="checkbox"></span>
-                <span class="description">ubrania, do wyrzucenia</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="toys" />
-                <span class="checkbox"></span>
-                <span class="description">zabawki</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="books" />
-                <span class="checkbox"></span>
-                <span class="description">książki</span>
-              </label>
-            </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="other" />
-                <span class="checkbox"></span>
-                <span class="description">inne</span>
-              </label>
-            </div>
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input#}
+{#                  type="checkbox"#}
+{#                  name="categories"#}
+{#                  value="clothes-useless"#}
+{#                />#}
+{#                <span class="checkbox"></span>#}
+{#                <span class="description">ubrania, do wyrzucenia</span>#}
+{#              </label>#}
+{#            </div>#}
+{##}
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input type="checkbox" name="categories" value="toys" />#}
+{#                <span class="checkbox"></span>#}
+{#                <span class="description">zabawki</span>#}
+{#              </label>#}
+{#            </div>#}
+{##}
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input type="checkbox" name="categories" value="books" />#}
+{#                <span class="checkbox"></span>#}
+{#                <span class="description">książki</span>#}
+{#              </label>#}
+{#            </div>#}
+{##}
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input type="checkbox" name="categories" value="other" />#}
+{#                <span class="checkbox"></span>#}
+{#                <span class="description">inne</span>#}
+{#              </label>#}
+{#            </div>#}
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step">Dalej</button>
@@ -160,34 +166,24 @@
           <!-- STEP 4 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+          <div id="institutions"></div>
+{#              {% for i in inst %}#}
+{##}
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input type="radio" name="organization" value="old" />#}
+{#                <span class="checkbox radio"></span>#}
+{#                <span class="description">#}
+{#                  <div class="title">{{ i.name }}</div>#}
+{#                  <div class="subtitle">#}
+{#                    {{ i.description }}#}
+{#                  </div>#}
+{#                </span>#}
+{#              </label>#}
+{#            </div>#}
+{#              {% endfor %}#}
 
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="radio" name="organization" value="old" />
-                <span class="checkbox radio"></span>
-                <span class="description">
-                  <div class="title">Fundacja “Bez domu”</div>
-                  <div class="subtitle">
-                    Cel i misja: Pomoc dla osób nie posiadających miejsca
-                    zamieszkania
-                  </div>
-                </span>
-              </label>
-            </div>
 
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="radio" name="organization" value="old" />
-                <span class="checkbox radio"></span>
-                <span class="description">
-                  <div class="title">Fundacja “Dla dzieci"</div>
-                  <div class="subtitle">
-                    Cel i misja: Pomoc osobom znajdującym się w trudnej sytuacji
-                    życiowej.
-                  </div>
-                </span>
-              </label>
-            </div>
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>

@@ -18,6 +18,7 @@ from django.urls import path
 from dary.views import LandingPage, MyLogin, AddDonation, Register
 from django.contrib.auth import views as auth_views
 from dary.forms import CustomAuthForm
+from dary import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
     path('login/', MyLogin.as_view(template_name='login.html', authentication_form=CustomAuthForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html', next_page='main'), name='logout'),
-    path('register/', Register.as_view(), name='register')
+    path('register/', Register.as_view(), name='register'),
+    path('get_institution/', views.get_inst_by_type, name='get_institution'),
 ]

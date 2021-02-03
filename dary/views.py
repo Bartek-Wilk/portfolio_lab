@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from dary.forms import CustomUserCreationForm
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
+import json
 
 
 class LandingPage(View):
@@ -27,17 +30,21 @@ class LandingPage(View):
 
         return render(request, 'index.html', context={'total_bags':total_bags, 'inst':inst, 'funds':funds, 'ngo':ngo, 'zl':zl })
 
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
+    login_url = 'login'
     def get(self, request):
-        return render(request, 'form.html')
+        cat = Category.objects.all()
+        inst = Institution.objects.all()
+        return render(request, 'form.html', context={'cat':cat, 'inst':inst})
 
 class MyLogin(LoginView):
 
-    def form_valid(self, form):
+
+    def form_invalid(self, form):
         uemail = form.cleaned_data.get('username')
         if not User.objects.filter(email=uemail).exists():
             return redirect('register')
-        return super().form_valid(form)
+        return super().form_invalid(form)
 
 class Register(View):
 
@@ -53,5 +60,11 @@ class Register(View):
             messages.success(request, 'Konto założone')
             return redirect('login')
 
-
+def get_inst_by_type(request):
+    type_id = request.GET.getlist('cat_id')
+    if type_id is not None:
+        inst_type = Institution.objects.filter(category__in=type_id).distinct()
+    else:
+        inst_type = Institution.objects.all()
+    return render(request, "inst.html", {'inst_type':inst_type})
 

@@ -1,3 +1,19 @@
+function get_institution()
+{
+  var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+  var cats_ids = [];
+  markedCheckbox.forEach(checkbox=>cats_ids.push(checkbox.value))
+   console.log(cats_ids);
+  var addres = '/get_institution?';
+  for(var i=0;i<cats_ids.length; i++)
+  {
+    addres = addres + "cat_id=" +cats_ids[i]+'&'
+  }
+     fetch(addres)
+        .then(response => response.text())
+        .then(data => document.getElementById("institutions").innerHTML = data);
+  console.log(addres)
+}
 document.addEventListener("DOMContentLoaded", function() {
   /**
    * HomePage - Help section
@@ -220,6 +236,11 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
+      if (this.currentStep==3)
+       {
+         get_institution();
+       }
+
 
       // TODO: Validation
 
