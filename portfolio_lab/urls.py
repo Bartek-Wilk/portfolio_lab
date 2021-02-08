@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from dary.views import LandingPage, MyLogin, AddDonation, Register
+from dary.views import LandingPage, MyLogin, AddDonation, \
+    Register, InstitutionList, InstitutionDetails, InstitutionUpdate,InstitutionCreate, InstitutionDelete, user_profile
 from django.contrib.auth import views as auth_views
 from dary.forms import CustomAuthForm
 from dary import views
@@ -28,4 +29,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html', next_page='main'), name='logout'),
     path('register/', Register.as_view(), name='register'),
     path('get_institution/', views.get_inst_by_type, name='get_institution'),
+    path('institutions/', InstitutionList.as_view(), name='institutions'),
+    path('institution_details/<int:pk>', InstitutionDetails.as_view(), name='institution-details'),
+    path('<pk>/update/', InstitutionUpdate.as_view(), name='update'),
+    path('inst_create/', InstitutionCreate.as_view(), name='inst-create'),
+    path('<pk>/delete/', InstitutionDelete.as_view(), name='delete'),
+    path('profile/', views.user_profile, name='profile')
 ]

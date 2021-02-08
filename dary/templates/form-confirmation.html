@@ -3,17 +3,23 @@
 {% block content %}
     <header class="header--form-page">
       <nav class="container container--70">
-        <ul class="nav--actions">
+{% if user.is_authenticated %}
+          <ul class="nav--actions">
           <li class="logged-user">
-            Witaj Agata
+            Witaj {{ user.username }}
             <ul class="dropdown">
               <li><a href="#">Profil</a></li>
-              <li><a href="#">Moje zbiórki</a></li>
-              <li><a href="#">Wyloguj</a></li>
+              <li><a href="#">Ustawienia</a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">Panel administracyjny</a></li>
+                {% endif %}
+              <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             </ul>
           </li>
         </ul>
-
+             {% else %}
+             <p><a href="{% url 'login' %}">Zaloguj się</a></p>
+          {% endif %}
         <ul>
           <li><a href="/" class="btn btn--without-border active">Start</a></li>
           <li><a href="/#steps" class="btn btn--without-border">O co chodzi?</a></li>
@@ -22,14 +28,31 @@
           <li><a href="/#contact" class="btn btn--without-border">Kontakt</a></li>
         </ul>
       </nav>
-
       <div class="slogan container container--90">
           <h2>
             Dziękujemy za przesłanie formularza Na maila prześlemy wszelkie
             informacje o odbiorze.
           </h2>
+        <div class="container container--85">
+{#          {% for dane in d %}#}
+        <div class="stats--item">
+          <p>{{ donations.quantity }}</p>
+          <h3>Oddanych worków</h3>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
+        </div>
+
+        <div class="stats--item">
+        <h3>Dla</h3>
+            <p>{{ donations.institution }}</p>
+          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
+        </div>
+{#        {% endfor %}#}
       </div>
-    </header>
+      </div>
+
+       </header>
+
+
 
     <footer>
       <div class="contact">

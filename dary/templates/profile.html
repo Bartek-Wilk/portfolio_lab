@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <header class="header--main-page">
+          <div class="slogan container container--90">
+        <div class="slogan--item">
+          <h1>
+            Profil użytkownika
+          </h1>
+        </div>
+        <div class="slogan--item">
+          <h1>
+              <span class="description">
+                  <div class="title">{{ user.first_name}}</div>
+                  <div class="subtitle">
+                    {{ user.last_name }}
+                  </div>
+                    <div class="subtitle">
+                    {{ user.email }}
+                  </div>
+                </span>
+          </h1>
+        </div>
+          </div>
+    </header>
+{% endblock content %}

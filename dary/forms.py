@@ -7,6 +7,8 @@ from django.forms.widgets import PasswordInput, TextInput
 
 class CustomUserCreationForm(forms.Form):
     username = forms.CharField(label='',min_length=4, max_length=150, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Nazwa użytkownika'}))
+    first_name = forms.CharField(label='', min_length=4, max_length=150, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Imię'}))
+    last_name = forms.CharField(label='', min_length=4, max_length=150, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nazwisko'}))
     email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder':'Email'}))
     password1 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Hasło'}))
     password2 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Powtórz Hasło'}))
@@ -35,11 +37,15 @@ class CustomUserCreationForm(forms.Form):
         return password2
 
     def save(self, commit=True):
+        cd = self.cleaned_data
         user = User.objects.create_user(
-            self.cleaned_data['username'],
-            self.cleaned_data['email'],
-            self.cleaned_data['password1']
+            cd['username'],
+            cd['email'],
+            cd['password1']
         )
+        user.first_name = cd["first_name"]
+        user.last_name = cd["last_name"]
+        user.save()
         return user
 
 class CustomAuthForm(AuthenticationForm):

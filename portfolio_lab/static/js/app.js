@@ -1,3 +1,8 @@
+function formSubmit()
+{
+    document.getElementById("don_form").submit();
+}
+
 function get_institution()
 {
   var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -14,6 +19,65 @@ function get_institution()
         .then(data => document.getElementById("institutions").innerHTML = data);
   console.log(addres)
 }
+
+function handle_form()
+{
+  let form = document.getElementById("don_form");
+  let summary = document.getElementById("summary");
+  let fd = new FormData(form);
+  fd.delete('csrfmiddlewaretoken');
+  let ul = document.createElement('ul');
+  for (let value of fd.values()) {
+    let li = document.createElement('li', )
+    li.innerHTML = value
+    ul.appendChild(li)
+
+  }
+  summary.innerHTML = ""
+  summary.appendChild(ul)
+
+}
+function checkbox_val()
+{
+  let check = document.querySelectorAll('input[type="checkbox"]:checked').length;
+  if (check > 0) {
+    console.log('Good');}
+  else {console.log('You didn\'t choose any of the checkboxes!');
+  return false;}
+}
+
+function validate_orgs()
+{
+  let check = document.querySelectorAll('input[type="radio"]:checked').length;
+  if (check > 0) {
+    console.log('Good');}
+  else {console.log('You didn\'t choose any of the checkboxes!');
+  return false;}
+}
+
+function validate_bags() {
+  let bags = document.getElementById('bags');
+  if (!bags.value == "") {
+    console.log('jest ok');
+    } else {console.log('braki');
+    return false;}
+}
+function validate_address() {
+  let street = document.getElementById('street');
+  let city = document.getElementById('city');
+  let zip = document.getElementById('street');
+  let phone = document.getElementById('phone');
+  let date = document.getElementById('date');
+  let time = document.getElementById('time');
+
+  if (street.value == "" || city.value == "" || zip.value == "" || phone.value == "" || date.value == "" || time.value == "") {
+    console.log('braki');
+    return false
+    } else {console.log('jest ok');
+    return true;}
+  }
+
+
 document.addEventListener("DOMContentLoaded", function() {
   /**
    * HomePage - Help section
@@ -236,9 +300,39 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
+      if (this.currentStep > 1) {
+        if (checkbox_val() == false) {
+          alert('Choose categories');
+          this.currentStep = 1;
+        }
+
+      }
+      if (this.currentStep > 2) {
+        if (validate_bags() == false) {
+          alert('Give number of bags');
+          this.currentStep = 2;
+        }
+      }
+      if (this.currentStep > 3) {
+        if (validate_orgs() == false) {
+          alert('Choose organisation');
+          this.currentStep = 3;
+        }
+      }
+            if (this.currentStep > 4) {
+        if (validate_address() == false) {
+          alert('Fill up missing data');
+          this.currentStep = 4;
+        }
+      }
+
       if (this.currentStep==3)
        {
          get_institution();
+       }
+      if (this.currentStep==5)
+       {
+         handle_form();
        }
 
 
@@ -265,6 +359,7 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     submit(e) {
       e.preventDefault();
+      formSubmit();
       this.currentStep++;
       this.updateForm();
     }

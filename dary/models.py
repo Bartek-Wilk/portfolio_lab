@@ -26,6 +26,9 @@ class Institution(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('institution-details', args=[str(self.id)])
+
 class Donation(models.Model):
     quantity = models.IntegerField()
     categories = models.ManyToManyField(Category, related_name='donation')
@@ -38,4 +41,5 @@ class Donation(models.Model):
     pick_up_time = models.TimeField(default=datetime.now().time())
     pick_up_comment = models.TextField(max_length=255)
     user = models.ForeignKey(User, related_name='donuser', null=True, default=None, on_delete=models.CASCADE)
+
 

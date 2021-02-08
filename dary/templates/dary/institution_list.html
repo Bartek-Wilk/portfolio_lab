@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ <h1>Institution List</h1>
+  {% if institution_list %}
+  <ul class="summary">
+    {% for inst in institution_list %}
+      <li>
+        <a class=""href="{{ inst.get_absolute_url }}">{{ inst.name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+    <p>There are no Institutions in the library.</p>
+  {% endif %}
+    <script src="{% static 'js/app.js' %}"></script>
+{% endblock content %}

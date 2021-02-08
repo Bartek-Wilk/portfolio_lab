@@ -13,6 +13,9 @@ from dary.forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
+from dary.mixins import SuperuserRequiredMixin
+from django.urls import reverse_lazy
 import json
 
 
@@ -36,6 +39,27 @@ class AddDonation(LoginRequiredMixin, View):
         cat = Category.objects.all()
         inst = Institution.objects.all()
         return render(request, 'form.html', context={'cat':cat, 'inst':inst})
+    def post(self, request):
+        quantity = request.POST.get('bags')
+        categories = request.POST.get('categories')
+        institution = request.POST.get('organization')
+        inst_id = Institution.objects.get(id=institution)
+        adress = request.POST.get('address')
+        phone_number = request.POST.get('phone')
+        city = request.POST.get('city')
+        zip_code = request.POST.get('postcode')
+        pick_up_date = request.POST.get('data')
+        pick_up_time = request.POST.get('time')
+        pick_up_comment = request.POST.get('more_info')
+        d=Donation.objects.create(quantity=quantity, institution=inst_id,
+                                    adress=adress, phone_number=phone_number, city=city, zip_code=zip_code,
+                                    pick_up_date=pick_up_date,
+                                    pick_up_time=pick_up_time, pick_up_comment=pick_up_comment)
+        d.categories.set(categories)
+        last = Donation.objects.latest('id')
+
+        return render(request, 'form-confirmation.html', context={'donations':d})
+
 
 class MyLogin(LoginView):
 
@@ -57,6 +81,7 @@ class Register(View):
 
         if f.is_valid():
             f.save()
+
             messages.success(request, 'Konto założone')
             return redirect('login')
 
@@ -68,3 +93,24 @@ def get_inst_by_type(request):
         inst_type = Institution.objects.all()
     return render(request, "inst.html", {'inst_type':inst_type})
 
+class InstitutionList(SuperuserRequiredMixin,ListView):
+    model = Institution
+    paginate_by = 10
+
+class InstitutionDetails(SuperuserRequiredMixin,DetailView):
+    model = Institution
+
+class InstitutionUpdate(SuperuserRequiredMixin, UpdateView):
+    model = Institution
+
+class InstitutionCreate(SuperuserRequiredMixin,CreateView):
+    model = Institution
+
+class InstitutionDelete(SuperuserRequiredMixin,DeleteView):
+    model = Institution
+    success_url = reverse_lazy('institution')
+
+def user_profile(request):
+    user = User.objects.get(id=request.user.id)
+
+    return render(request, 'profile.html', {'user':user})

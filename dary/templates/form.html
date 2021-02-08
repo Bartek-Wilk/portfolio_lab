@@ -8,7 +8,7 @@
           <li class="logged-user">
             Witaj {{ user.username }}
             <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
+              <li><a href="{% url 'profile' %}">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>
                 {% if user.is_superuser %}
                 <li><a href="{% url 'admin:index' %}">Panel administracyjny</a></li>
@@ -60,7 +60,7 @@
       </div>
     </header>
 
-    <section class="form--steps">
+    <div class="form--steps">
       <div class="form--steps-instructions">
         <div class="form--steps-container">
           <h3>Ważne!</h3>
@@ -83,14 +83,15 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="form-confirmation.html" method="post">
+        <form action="#" method="post" id="don_form">
+        {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
             {% for c in cat %}
             <div class="form-group form-group--checkbox">
               <label>
-                <input
+                <input id="chk"
                   type="checkbox"
                   name="categories"
                   value="{{ c.id }}"
@@ -102,6 +103,7 @@
               </label>
             </div>
               {% endfor %}
+          <div name="error"></div>
 
 {#            <div class="form-group form-group--checkbox">#}
 {#              <label>#}
@@ -151,9 +153,11 @@
             <div class="form-group form-group--inline">
               <label>
                 Liczba 60l worków:
-                <input type="number" name="bags" step="1" min="1" />
+                <input id="bags" type="number" name="bags" step="1" min="1" />
               </label>
+
             </div>
+              <div name="error"></div>
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
@@ -167,6 +171,7 @@
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
           <div id="institutions"></div>
+              <div name="error"></div>
 {#              {% for i in inst %}#}
 {##}
 {#            <div class="form-group form-group--checkbox">#}
@@ -199,35 +204,41 @@
               <div class="form-section--column">
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Ulica <input type="text" name="address" /> </label>
+                  <label> Ulica <input id="street" type="text" name="address" /> </label>
                 </div>
+                  <div id="error"></div>
 
                 <div class="form-group form-group--inline">
-                  <label> Miasto <input type="text" name="city" /> </label>
-                </div>
-
-                <div class="form-group form-group--inline">
-                  <label>
-                    Kod pocztowy <input type="text" name="postcode" />
-                  </label>
+                  <label> Miasto <input id="city" type="text" name="city" /> </label>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
-                    Numer telefonu <input type="phone" name="phone" />
+                    Kod pocztowy <input id="zip" type="text" name="postcode" />
                   </label>
                 </div>
+                  <div name="error"></div>
+
+                <div class="form-group form-group--inline">
+                  <label>
+                    Numer telefonu <input id="phone" type="phone" name="phone" />
+                  </label>
+                </div>
+                  <div name="error"></div>
               </div>
+
 
               <div class="form-section--column">
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Data <input type="date" name="data" /> </label>
+                  <label> Data <input id="date" type="date" name="data" /> </label>
                 </div>
+                  <div name="error"></div>
 
                 <div class="form-group form-group--inline">
-                  <label> Godzina <input type="time" name="time" /> </label>
+                  <label> Godzina <input id="time" type="time" name="time" /> </label>
                 </div>
+                  <div name="error"></div>
 
                 <div class="form-group form-group--inline">
                   <label>
@@ -246,46 +257,45 @@
           <!-- STEP 6 -->
           <div data-step="5">
             <h3>Podsumowanie Twojej darowizny</h3>
-
-            <div class="summary">
+            <div class="summary" id="summary">
               <div class="form-section">
                 <h4>Oddajesz:</h4>
-                <ul>
-                  <li>
-                    <span class="icon icon-bag"></span>
-                    <span class="summary--text"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
-                    >
-                  </li>
-
-                  <li>
-                    <span class="icon icon-hand"></span>
-                    <span class="summary--text"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
-                    >
-                  </li>
-                </ul>
-              </div>
-
-              <div class="form-section form-section--columns">
-                <div class="form-section--column">
-                  <h4>Adres odbioru:</h4>
-                  <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
-                  </ul>
-                </div>
-
-                <div class="form-section--column">
-                  <h4>Termin odbioru:</h4>
-                  <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
-                  </ul>
-                </div>
+{#                <ul>#}
+{#                  <li>#}
+{#                    <span class="icon icon-bag"></span>#}
+{#                    <span class="summary--text"#}
+{#                      >4 worki ubrań w dobrym stanie dla dzieci</span#}
+{#                    >#}
+{#                  </li>#}
+{##}
+{#                  <li>#}
+{#                    <span class="icon icon-hand"></span>#}
+{#                    <span class="summary--text"#}
+{#                      >Dla fundacji "Mam marzenie" w Warszawie</span#}
+{#                    >#}
+{#                  </li>#}
+{#                </ul>#}
+{#              </div>#}
+{##}
+{#              <div class="form-section form-section--columns">#}
+{#                <div class="form-section--column">#}
+{#                  <h4>Adres odbioru:</h4>#}
+{#                  <ul>#}
+{#                    <li>Prosta 51</li>#}
+{#                    <li>Warszawa</li>#}
+{#                    <li>99-098</li>#}
+{#                    <li>123 456 789</li>#}
+{#                  </ul>#}
+{#                </div>#}
+{##}
+{#                <div class="form-section--column">#}
+{#                  <h4>Termin odbioru:</h4>#}
+{#                  <ul>#}
+{#                    <li>13/12/2018</li>#}
+{#                    <li>15:40</li>#}
+{#                    <li>Brak uwag</li>#}
+{#                  </ul>#}
+{#                </div>#}
               </div>
             </div>
 
@@ -296,7 +306,7 @@
           </div>
         </form>
       </div>
-    </section>
+    </div>
 
     <footer>
       <div class="contact">
