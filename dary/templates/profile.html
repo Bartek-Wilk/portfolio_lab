@@ -2,8 +2,9 @@
 {% load static %}
 {% block content %}
     <header class="header--main-page">
-          <div class="slogan container container--90">
-        <div class="slogan--item">
+<section id="stats" class="stats">
+      <div class="container container--85">
+        <div class="stats--item">
           <h1>
             Profil użytkownika
           </h1>
@@ -20,7 +21,11 @@
                   </div>
                 </span>
           </h1>
+            <ul class="help--buttons">
+        <li data-id="1"><a href="{% url 'donation_list' %}" class="btn btn--without-border active">Moje dary</a></li>
+      </ul>
         </div>
           </div>
+</section>
     </header>
 {% endblock content %}

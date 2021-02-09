@@ -42,4 +42,11 @@ class Donation(models.Model):
     pick_up_comment = models.TextField(max_length=255)
     user = models.ForeignKey(User, related_name='donuser', null=True, default=None, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['pick_up_date']
+
+    def __str__(self):
+        return self.name
+
+
 

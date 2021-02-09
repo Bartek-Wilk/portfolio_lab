@@ -41,7 +41,7 @@ class AddDonation(LoginRequiredMixin, View):
         return render(request, 'form.html', context={'cat':cat, 'inst':inst})
     def post(self, request):
         quantity = request.POST.get('bags')
-        categories = request.POST.get('categories')
+        categories = request.POST.getlist('categories')
         institution = request.POST.get('organization')
         inst_id = Institution.objects.get(id=institution)
         adress = request.POST.get('address')
@@ -56,6 +56,10 @@ class AddDonation(LoginRequiredMixin, View):
                                     pick_up_date=pick_up_date,
                                     pick_up_time=pick_up_time, pick_up_comment=pick_up_comment)
         d.categories.set(categories)
+        userr=request.user
+        us=User.objects.get(username=userr)
+        d.user=us
+        d.save()
         last = Donation.objects.latest('id')
 
         return render(request, 'form-confirmation.html', context={'donations':d})
@@ -114,3 +118,11 @@ def user_profile(request):
     user = User.objects.get(id=request.user.id)
 
     return render(request, 'profile.html', {'user':user})
+
+class DonationList(ListView):
+    model = Donation
+    context_object_name = 'donation_list'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Donation.objects.filter(user=self.request.user)

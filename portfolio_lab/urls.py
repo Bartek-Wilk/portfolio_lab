@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from dary.views import LandingPage, MyLogin, AddDonation, \
+from dary.views import LandingPage, MyLogin, AddDonation, DonationList, \
     Register, InstitutionList, InstitutionDetails, InstitutionUpdate,InstitutionCreate, InstitutionDelete, user_profile
 from django.contrib.auth import views as auth_views
 from dary.forms import CustomAuthForm
@@ -34,5 +34,6 @@ urlpatterns = [
     path('<pk>/update/', InstitutionUpdate.as_view(), name='update'),
     path('inst_create/', InstitutionCreate.as_view(), name='inst-create'),
     path('<pk>/delete/', InstitutionDelete.as_view(), name='delete'),
-    path('profile/', views.user_profile, name='profile')
+    path('profile/', views.user_profile, name='profile'),
+    path('donation_list/', DonationList.as_view(), name='donation_list')
 ]

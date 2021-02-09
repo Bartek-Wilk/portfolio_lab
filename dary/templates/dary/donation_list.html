@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ <h1>Donation List</h1>
+  {% if donation_list %}
+      <section id="stats" class="stats">
+      <div class="container container--85">
+        <div class="stats--item">
+      {% for don in donation_list %}
+        <h2> Organizacja: {{ don.institution.name }} </h2>
+          <p> Liczba worków: {{ don.quantity }}</p>
+        <p> Radzaj darów: {{ don.categories.all|join:", " }} </p>
+           <p> Data odbioru: {{ don.pick_up_date}} </p>
+      {% endfor %}
+          </div>
+          </div>
+          </section>
+
+  {% else %}
+    <p>There are no Donations in the library.</p>
+  {% endif %}
+    <script src="{% static 'js/app.js' %}"></script>
+{% endblock content %}
